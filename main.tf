@@ -60,7 +60,7 @@ module "ecs-alb-task-grafana-envoy-proxy" {
 }
 
 module "ecs-alb-task-grafana" {
-  source = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=tags/5.5.4"
+  source = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=tags/5.6.1"
 
   name                              = var.service_name
   project                           = var.project
