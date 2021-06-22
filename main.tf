@@ -48,7 +48,7 @@ resource "aws_route53_record" "grafana" {
 }
 module "ecs-alb-task-grafana-envoy-proxy" {
   count                             = local.app_mesh_count
-  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-envoy.git?ref=tags/1.1.1"
+  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-envoy.git?ref=tags/1.1.3"
   appmesh-resource-arn              = module.grafana-appmesh[count.index].appmesh-resource-arn
   awslogs-group                     = module.ecs-alb-task-grafana.log_group_name
   awslogs-region                    = var.aws_region
