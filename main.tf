@@ -4,13 +4,11 @@ locals {
   grafana_service_image_repository  = "miquidocompany/grafana"
   grafana_service_image_tag         = "7.5.7"
   appmesh_grafana_service_dns       = "${var.service_name}.${local.appmesh_domain}"
-  appmesh_grafana_cloud_map_dns     = var.aws_service_discovery_private_dns_namespace != null ? replace(local.appmesh_grafana_service_dns, local.appmesh_domain, var.aws_service_discovery_private_dns_namespace.name) : null
+  appmesh_grafana_cloud_map_dns     = var.aws_service_discovery_private_dns_namespace.name != null ? replace(local.appmesh_grafana_service_dns, local.appmesh_domain, var.aws_service_discovery_private_dns_namespace.name) : null
   appmesh_domain                    = "${var.environment}.app.mesh.local"
 
   alb_target_group_arn = join("", module.alb-ingress-grafana.*.target_group_arn)
-  app_mesh_count       = var.aws_service_discovery_private_dns_namespace != null && var.aws_appmesh_mesh_id != null && var.mesh_route53_zone_id != null ? 1 : 0
-
-
+  app_mesh_count       = var.enable_app_mesh ? 1 : 0
 }
 
 module "alb-ingress-grafana" {
@@ -185,24 +183,6 @@ resource "random_password" "grafana_admin" {
   upper   = true
   special = false
 }
-
-// uncomment after grafana is ready
-//provider "grafana" {
-//  url  = "https://grafana.showcase.miquido.cloud"
-//  auth = "admin:${random_password.grafana_admin.result}"
-//}
-//
-
-
-//resource "grafana_data_source" "grafana" {
-//  type          = "grafana"
-//  name          = "myapp-metrics"
-//  url           = "${local.appmesh_grafana_service_dns}:${local.grafana_service_port}"
-//}
-//
-//resource "grafana_dashboard" "sample" {
-//  config_json = file("${path.module}/grafana_sample_dash.json")
-//}
 
 resource "aws_ssm_parameter" "grafana_admin_password" {
   name  = "/${var.environment}/grafana/admin_password"
