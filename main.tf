@@ -3,12 +3,8 @@ locals {
   grafana_service_health_check_path = "/api/health"
   grafana_service_image_repository  = "miquidocompany/grafana"
   grafana_service_image_tag         = "7.5.7"
-  appmesh_grafana_service_dns       = "${var.service_name}.${local.appmesh_domain}"
-  appmesh_grafana_cloud_map_dns     = var.aws_service_discovery_private_dns_namespace.name != null ? replace(local.appmesh_grafana_service_dns, local.appmesh_domain, var.aws_service_discovery_private_dns_namespace.name) : null
-  appmesh_domain                    = "${var.environment}.app.mesh.local"
 
   alb_target_group_arn = join("", module.alb-ingress-grafana.*.target_group_arn)
-  app_mesh_count       = var.enable_app_mesh ? 1 : 0
 }
 
 module "alb-ingress-grafana" {
@@ -44,21 +40,9 @@ resource "aws_route53_record" "grafana" {
     evaluate_target_health = true
   }
 }
-module "ecs-alb-task-grafana-envoy-proxy" {
-  count                             = local.app_mesh_count
-  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-envoy.git?ref=tags/1.1.3"
-  appmesh-resource-arn              = module.grafana-appmesh[count.index].appmesh-resource-arn
-  awslogs-group                     = module.ecs-alb-task-grafana.log_group_name
-  awslogs-region                    = var.aws_region
-  app-ports                         = local.grafana_service_port
-  container_name                    = "${var.project}-${var.environment}-${var.service_name}"
-  aws_service_discovery_service_arn = module.grafana-appmesh[count.index].aws_service_discovery_service_arn
-  egress-ignored-ports              = ""
-
-}
 
 module "ecs-alb-task-grafana" {
-  source = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=tags/5.6.1"
+  source = "../terraform-ecs-alb-task"
 
   name                              = var.service_name
   project                           = var.project
@@ -84,11 +68,10 @@ module "ecs-alb-task-grafana" {
   security_group_ids = [
     var.vpc.vpc_main_security_group_id
   ]
-  subnet_ids            = var.vpc.private_subnet_ids
-  ecs_cluster_name      = var.ecs_cluster.name
-  platform_version      = "1.4.0"
-  additional_containers = [join("", module.ecs-alb-task-grafana-envoy-proxy.*.json_map_encoded)]
-  exec_enabled          = true
+  subnet_ids       = var.vpc.private_subnet_ids
+  ecs_cluster_name = var.ecs_cluster.name
+  platform_version = "1.4.0"
+  exec_enabled     = true
 
   force_new_deployment           = true
   ignore_changes_task_definition = false
@@ -130,9 +113,11 @@ module "ecs-alb-task-grafana" {
     timeout     = 2
   }
 
-  service_registries   = length(module.ecs-alb-task-grafana-envoy-proxy) == 1 ? module.ecs-alb-task-grafana-envoy-proxy[0].service_registries : []
-  container_depends_on = length(module.ecs-alb-task-grafana-envoy-proxy) == 1 ? [module.ecs-alb-task-grafana-envoy-proxy[0].container_dependant] : null
-  proxy_configuration  = length(module.ecs-alb-task-grafana-envoy-proxy) == 1 ? module.ecs-alb-task-grafana-envoy-proxy[0].proxy_configuration : null
+  app_mesh_enable                                      = var.enable_app_mesh
+  app_mesh_aws_service_discovery_private_dns_namespace = var.aws_service_discovery_private_dns_namespace
+  app_mesh_id                                          = var.app_mesh_id
+  app_mesh_route53_zone                                = var.app_mesh_route53_zone
+  app_mesh_health_check_path                           = local.grafana_service_health_check_path
 
   capacity_provider_strategies = [
     {
@@ -188,21 +173,4 @@ resource "aws_ssm_parameter" "grafana_admin_password" {
   name  = "/${var.environment}/grafana/admin_password"
   type  = "SecureString"
   value = random_password.grafana_admin.result
-}
-
-module "grafana-appmesh" {
-  count                    = local.app_mesh_count
-  source                   = "git::ssh://git@gitlab.com/miquido/terraform/terraform-app-mesh-service.git?ref=tags/1.0.1"
-  app_health_check_path    = local.grafana_service_health_check_path
-  app_port                 = local.grafana_service_port
-  appmesh_domain           = local.appmesh_domain
-  appmesh_name             = var.aws_appmesh_mesh_id
-  appmesh_service_name     = var.service_name
-  cloud_map_dns            = local.appmesh_grafana_cloud_map_dns
-  cloud_map_hosted_zone_id = var.aws_service_discovery_private_dns_namespace.hosted_zone
-  cloud_map_namespace_name = var.aws_service_discovery_private_dns_namespace.name
-  map_id                   = var.aws_service_discovery_private_dns_namespace.id
-  tags                     = var.tags
-  task_role_name           = module.ecs-alb-task-grafana.task_role_name
-  zone_id                  = var.mesh_route53_zone_id
 }

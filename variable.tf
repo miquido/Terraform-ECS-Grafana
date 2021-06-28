@@ -46,16 +46,35 @@ variable "ingress_priority" {
   description = "The priority for the rules without authentication, between 1 and 50000 (1 being highest priority). Must be different from `authenticated_priority` since a listener can't have multiple rules with the same priority"
 }
 
-variable "mesh_route53_zone_id" {
-  type        = string
+variable "app_mesh_aws_service_discovery_private_dns_namespace" {
+  type = object({
+    name        = string
+    id          = string
+    hosted_zone = string
+  })
   default     = null
-  description = "mesh route id to create grafana entry"
+  description = "app mesh private DNS namespace"
+}
+
+variable "app_mesh_route53_zone" {
+  type = object({
+    id   = string
+    name = string
+  })
+  default     = null
+  description = "app_mesh route zone to create service entry"
 }
 
 variable "route53_zone_id" {
   type        = string
   default     = null
   description = "route id to create grafana entry"
+}
+
+variable "app_mesh_id" {
+  type        = string
+  default     = null
+  description = "app mesh id to create service entry"
 }
 
 variable "project" {
@@ -70,11 +89,6 @@ variable "environment" {
 variable "aws_region" {
   type        = string
   description = "Default AWS Region"
-}
-
-variable "aws_appmesh_mesh_id" {
-  type    = string
-  default = null
 }
 
 variable "aws_service_discovery_private_dns_namespace" {
