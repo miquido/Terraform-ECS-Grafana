@@ -33,9 +33,9 @@ module "grafana" {
     id          = "test"
     hosted_zone = "test"
   }
-  app_mesh_id  = "test" // aws_appmesh_mesh.service.id
+  app_mesh_id = "test"      // aws_appmesh_mesh.service.id
   app_mesh_route53_zone = { // aws_route53_zone.mesh_private_zone
-    id = "test"
+    id   = "test"
     name = "test"
   }
 
