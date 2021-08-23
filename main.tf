@@ -41,6 +41,19 @@ resource "aws_route53_record" "grafana" {
   }
 }
 
+resource "aws_route53_record" "grafana-ipv6" {
+  count   = var.alb != null && var.domain != null ? 1 : 0
+  zone_id = var.route53_zone_id
+  name    = var.domain
+  type    = "AAAA"
+
+  alias {
+    name                   = var.alb.alb_dns_name
+    zone_id                = var.alb.alb_zone_id
+    evaluate_target_health = true
+  }
+}
+
 module "ecs-alb-task-grafana" {
   source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=tags/5.6.7"
   name                              = var.service_name
