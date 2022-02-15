@@ -1,21 +1,24 @@
 <!-- markdownlint-disable -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 3.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_alb-ingress-grafana"></a> [alb-ingress-grafana](#module\_alb-ingress-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git | 3.1.15 |
-| <a name="module_ecs-alb-task-grafana"></a> [ecs-alb-task-grafana](#module\_ecs-alb-task-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git | 5.6.16 |
+| <a name="module_alb-ingress-grafana"></a> [alb-ingress-grafana](#module\_alb-ingress-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git | 3.1.16 |
+| <a name="module_ecs-alb-task-grafana"></a> [ecs-alb-task-grafana](#module\_ecs-alb-task-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git | 5.6.20 |
 
 ## Resources
 
