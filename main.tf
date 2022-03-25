@@ -8,7 +8,7 @@ locals {
 }
 
 module "alb-ingress-grafana" {
-  source      = "git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git?ref=3.1.17"
+  source      = "git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git?ref=3.1.18"
   name        = var.service_name
   project     = var.project
   environment = var.environment
@@ -55,7 +55,7 @@ resource "aws_route53_record" "grafana-ipv6" {
 }
 
 module "ecs-alb-task-grafana" {
-  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=5.6.22"
+  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=5.6.24"
   name                              = var.service_name
   project                           = var.project
   environment                       = var.environment
