@@ -55,7 +55,7 @@ resource "aws_route53_record" "grafana-ipv6" {
 }
 
 module "ecs-alb-task-grafana" {
-  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=5.6.24"
+  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=5.6.25"
   name                              = var.service_name
   project                           = var.project
   environment                       = var.environment
@@ -88,11 +88,10 @@ module "ecs-alb-task-grafana" {
   force_new_deployment           = true
   ignore_changes_task_definition = false
 
-  volumes = [
+  efs_volumes = [
     {
-      name                        = "data"
-      host_path                   = null
-      docker_volume_configuration = []
+      name      = "data"
+      host_path = null
       efs_volume_configuration = [
         {
           file_system_id          = var.efs_id
