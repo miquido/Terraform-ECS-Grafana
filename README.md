@@ -77,7 +77,7 @@ module "grafana" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_alb-ingress-grafana"></a> [alb-ingress-grafana](#module\_alb-ingress-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git | 3.1.18 |
+| <a name="module_alb-ingress-grafana"></a> [alb-ingress-grafana](#module\_alb-ingress-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git | 3.1.20 |
 | <a name="module_ecs-alb-task-grafana"></a> [ecs-alb-task-grafana](#module\_ecs-alb-task-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git | 5.6.26 |
 
 ## Resources
