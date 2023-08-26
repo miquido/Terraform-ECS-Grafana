@@ -78,7 +78,7 @@ module "grafana" {
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_alb-ingress-grafana"></a> [alb-ingress-grafana](#module\_alb-ingress-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git | 3.1.21 |
-| <a name="module_ecs-alb-task-grafana"></a> [ecs-alb-task-grafana](#module\_ecs-alb-task-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git | 5.6.31 |
+| <a name="module_ecs-alb-task-grafana"></a> [ecs-alb-task-grafana](#module\_ecs-alb-task-grafana) | git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git | 5.6.37 |
 
 ## Resources
 
@@ -153,7 +153,7 @@ Available targets:
 
 ## Copyright
 
-Copyright © 2017-2022 [Miquido](https://miquido.com)
+Copyright © 2017-2023 [Miquido](https://miquido.com)
 
 
 
