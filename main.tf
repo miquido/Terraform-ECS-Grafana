@@ -8,7 +8,7 @@ locals {
 }
 
 module "alb-ingress-grafana" {
-  source      = "git::https://github.com/miquido/terraform-alb-ingress.git?ref=tags/3.1.22"
+  source = "git::https://github.com/miquido/terraform-alb-ingress.git?ref=tags/3.1.22"
 
   name        = var.service_name
   project     = var.project
