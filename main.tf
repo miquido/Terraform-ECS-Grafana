@@ -1,14 +1,15 @@
 locals {
   grafana_service_port              = 3000
   grafana_service_health_check_path = "/api/health"
-  grafana_service_image_repository  = "miquidocompany/grafana"
-  grafana_service_image_tag         = "7.5.7"
+  grafana_service_image_repository  = "grafana/grafana"
+  grafana_service_image_tag         = "10.3.1"
 
   alb_target_group_arn = join("", module.alb-ingress-grafana.*.target_group_arn)
 }
 
 module "alb-ingress-grafana" {
-  source      = "git::ssh://git@gitlab.com/miquido/terraform/terraform-alb-ingress.git?ref=3.1.22"
+  source      = "git::https://github.com/miquido/terraform-alb-ingress.git?ref=tags/3.1.22"
+
   name        = var.service_name
   project     = var.project
   environment = var.environment
@@ -55,7 +56,8 @@ resource "aws_route53_record" "grafana-ipv6" {
 }
 
 module "ecs-alb-task-grafana" {
-  source                            = "git::ssh://git@gitlab.com/miquido/terraform/terraform-ecs-alb-task.git?ref=5.6.31"
+  source = "git::https://github.com/miquido/terraform-ecs-alb-task.git?ref=tags/5.6.39"
+
   name                              = var.service_name
   project                           = var.project
   environment                       = var.environment
