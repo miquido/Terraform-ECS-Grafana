@@ -56,7 +56,7 @@ resource "aws_route53_record" "grafana-ipv6" {
 }
 
 module "ecs-alb-task-grafana" {
-  source = "git::https://github.com/miquido/terraform-ecs-alb-task.git?ref=tags/5.6.39"
+  source = "git::https://github.com/miquido/terraform-ecs-alb-task.git?ref=tags/5.6.40"
 
   name                              = var.service_name
   project                           = var.project
